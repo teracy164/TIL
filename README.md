@@ -1,2 +1,3 @@
 # TIL
-memo
+this repogitory is my memo.
+
