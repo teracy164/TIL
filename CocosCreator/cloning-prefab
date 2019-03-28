@@ -1,0 +1,15 @@
+# Prefabの動的な複製
+
+## 参考
+https://docs.cocos2d-x.org/creator/manual/en/scripting/create-destroy.html
+
+- スクリプトで、以下のようにプレハブを受け取る。
+```
+@property(cc.Prefab)
+prefab: cc.Prefab = null;
+```
+
+- cc.instantiateを使ってクローンする
+```
+var node = cc.instantiate(this.prefab);
+```
