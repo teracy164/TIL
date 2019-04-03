@@ -1,0 +1,175 @@
+## マクロの入力パラメータ
+## フィルタリング条件を指定
+## @param Space:title=スペース|type=spacekey|required=true
+## @param Page:title=対象ページ|type=confluence-content|required=true|desc=対象のページを選択してください。
+## @param Filter:title=フィルタリング条件|type=enum|enumValues=すべて,解決済,未解決|default=すべて
+<style>
+    span.parent-page {
+        font-size: 10px;
+    }
+    h1.now-page {
+        margin: 0;
+    }
+    span.comment-creator {
+        padding:3px 10px;
+        border-radius:50px;
+        background-color:rgba(244,177,131, 255);
+    }
+    span.comment-creator.reply {
+        background-color:rgba(251,229,214, 255);
+    }
+    .tooltip {
+        background-color: skyblue;
+        border-radius: 50px;
+        padding: 3px 10px;
+    }
+    .tooltip:hover {
+        text-decoration:none;
+    }
+    .tooltip span {
+        display:none;
+        padding:2px 3px;
+        margin-left:8px;
+    }
+    .tooltip:hover span {
+        display:inline;
+        position:absolute;
+        background:#ffffff;
+        border:1px solid #cccccc;
+        color:#6c6c6c;
+    }
+</style>
+
+## ページスタック（対象ページまでのパスを表示するのに使用）
+#set($pageStack = [])
+
+## リンク取得用マクロ
+#macro(dispLink $obj, $name)
+    <a href=$config.getBaseUrl()$obj.getUrlPath()>$name</a>
+#end
+
+## ページパス表示用マクロ
+#macro(dispPagePath $stack)
+    #set( $basePath = $config.getBaseUrl() )
+    #set( $size = $stack.size() )
+
+    #foreach( $target in $stack )
+        #if ( $velocityCount < $size )
+            ## 親ページまでのパスはスラッシュ区切りで、それぞれリンクを設定
+            <span class="parent-page">#dispLink($target, $target.getTitle()) / </span>
+        #else
+            ## 対象ページは大きめに表示
+            <h1 class="now-page">#dispLink($target, $target.getTitle())</h1>
+        #end
+    #end
+#end
+
+## コメント表示用マクロ
+#macro(dispComment $comment)
+    <strong>
+        ## 起票者
+        <span class="comment-creator">$comment.getCreator().getFullName()</span>
+        ## 起票日時
+        ($comment.getThreadChangedDate())
+    </strong>
+    ## コメント本文
+    $comment.getBodyAsString()
+
+    ## 返信があればセル内で続けて表示
+    #foreach($child in$comment.getChildren())
+        <hr>
+        <strong>
+            >>
+            ## 返信者
+            <span class="comment-creator reply">$child.getCreator().getFullName()</span>
+            ## 返信日時
+           ($child.getThreadChangedDate())
+        </strong>
+        ## 返信内容
+        $child.getBodyAsString()
+    #end
+#end
+
+## 状態表示用マクロ
+#macro(dispStatus $status)
+    #if( $status.isResolved() )
+        解決済み
+    #elseif( $status.isDangling() )
+        ## コメントした箇所が削除され、コメントが宙ぶらりんな状態
+        <span style="color:red;">コメント箇所削除</span>
+    #elseif ( $status.isOpen() || $status.isReopened() )
+        ## オープン／再オープン時
+        未解決
+    #end
+#end
+
+## コメント表示用マクロ
+#macro(disp $page)
+    #foreach( $comment in $page.getComments() )
+        ## 返信コメントは対象外とする（内部で返信コメント表示を行うため）
+        #if( $comment.isInlineComment() && $comment.getDepth() == 0 )
+            ## フィルタリング用にコメントステータスを取得
+            #set( $status = $comment.getStatus())
+            ## オープン／再オープンの場合を未解決として扱う
+            #set( $isOpen = ($status.isOpen() || $status.isReopened()) )
+
+            ## 選択したフィルタリング条件に基づいて表示切替
+            #if( $paramFilter == "すべて" || ( $paramFilter == "解決済" && $status.isResolved() ) || ( $paramFilter == "未解決" && $isOpen ))
+                <tr>
+                    <td>#dispPagePath($pageStack)</td>
+                    <td>#dispLink($comment, "リンク")</td>
+                    <td>#dispComment($comment)</td>
+                    <td>#dispStatus($status)</td>   
+                </tr>
+            #end
+        #end
+    #end
+#end
+
+## ページスタックへのプッシュ
+#macro(pagePush $page)
+    ## addするとインデックスが出力されて、そのままだと画面に表示されてしまうため、とりあえず変数に入れておく
+    #set( $tmp = $pageStack.add($page) )
+#end
+
+## ページスタックへのプッシュ
+#macro(pagePop)
+    #set( $index = $pageStack.size() - 1 )
+    ## removeするとPageが出力されて、そのままだと画面に表示されてしまうため、とりあえず変数に入れておく
+    #set( $tmp = $pageStack.remove($index) )
+#end
+
+## ページ検索
+#macro(search $page)
+    #pagePush($page)
+
+    ## 指定ページのインラインコメントを表示
+    #disp($page)
+
+    ## 子ページがあれば再帰的に検索する
+    #foreach( $child in $page.getChildren() )
+        #search($child)
+    #end
+
+    #pagePop()
+#end
+
+#set( $topPage = $pageManager.getPage($paramSpace, $paramPage) )
+<table>
+    <thead>
+        <th>ページ名</th>
+        <th>コメント表示</th>
+        <th>
+            コメント
+            <span class="comment-creator" style="padding: 3px;">起票者</span>
+            <span class="comment-creator reply" style="padding: 3px;">返信者</span>
+        </th>
+        <th>
+            状態：
+            <span class="tooltip">$paramFilter<span>編集->マクロの編集から条件を変更できます</span></span>
+        </th>
+    </thead>
+    <tbody>
+        #search($topPage)
+    </tbody>
+</table>
