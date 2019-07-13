@@ -1,0 +1,84 @@
+ng-japan logo meaning  Angular ア
+
+a# Keynote
+
+
+## アップグレードに関して
+
+１日で終わるほど簡単
+
+
+
+## ivy レンダリングエンジン 
+- samller 
+- faster complition
+- simpler debugging improved tyep checking
+- backward compatible
+- 
+
+導入方法は以下を参考
+angular.io/guide.ivy
+
+
+
+
+
+## Bazel
+読み方はベイゼル
+
+https://angular.io/guide/bazel#removing-bazel
+- incremental build and test 
+- full-stack
+- scale on the cloud
+- 
+
+## angular components
+
+Angualr materialとかのコンポーネント
+
+https://github.com/angular/components
+
+MDC web
+https://material.io/develop/web/
+
+
+preview
+angular/materialpexperimental
+
+
+
+
+# ng serve lunch
+ng serveでＡＮＧＵＬＡＲが起動（lanch）するとかけてる
+
+
+# sponcer LT
+- TechFeed
+- bitbank
+- treta
+  - 飲食店向けの予約管理（シェア３０％）
+  　　直前予約アプリも作ってる（iPhone向け）
+
+
+
+# micro front end architecture with framework agnostic web components
+
+## 導入
+
+- hyperlink
+  - OFFICE等のタイル形式のリンクのような感じ
+- IFRAME
+
+- web components
+  - shadow DOM
+
+
+
+# Angular Elements under the hood
+
+# Angular generic forms
+
+customAccessor
+
+
+
