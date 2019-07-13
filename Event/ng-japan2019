@@ -140,6 +140,56 @@ swift supported!!!
 
 
 
+# Black Holes and Angular Intercepter
+
+INterceptor を使うことでhttp requestトークンを付与したりが簡単にできる
+appmoduleのprovideで指定する
+
+# test で楽をすｒ
+
+protractor
+browser stack
+
+
+
+# nestjs typeORM pure Typescriptアーキテクチャ
+
+- NestJS
+  - TypescriptのサーバーサイドFW
+  - DIにも対応
+- TypeORM
+
+コンポーネント単位でデザインしてもらう
+→UIフレームワーク使ってても吸収できる
+
+古いjsコードはregacyディレクトリにした
+
+
+クライアント再度からNestjsのリモートメソッドコールができる
+
+モノレポ
+　→　Lerna
+    Lernaコマンドで再起的にいろいろやってくれる
+    
+greenkeeper
+
+
+# Building a Fast & SEO Friendly SPA with Angular
+
+sitemap is almost nesseccary
+
+ngコマンドでサイトマップ作れる
+
+
+page speed metter to SEO ranking
+
+perfomance use lighthouse
+
+webpはpngライクだけど、サイズが小さい
+→chrome,edge,firefoxはサポート
+　※safariは不明
+ 
+ 
 
 
 
