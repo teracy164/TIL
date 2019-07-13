@@ -81,4 +81,66 @@ ng serveでＡＮＧＵＬＡＲが起動（lanch）するとかけてる
 customAccessor
 
 
+# angular build,polyfills and application size
+
+how to reduce app size
+- compression
+  - GZIP,Brotli
+- assets optimisation
+- lazy load modules
+- intelligent build tooling
+
+## Bad
+
+- one big shared modue
+- missing with tracking script
+
+
+### Brotili
+javascriptだとgzipより14%サイズを小さくできる
+
+### AOT compilatio
+
+#### analisys
+
+ng build --prod --status-json
+npx webpack-bundle-analyzer dist/stats.json
+
+bundle phobia
+
+
+VS Code plugin -> Import Cost
+
+### Bughets
+angular.json budgets; {...}
+application size specify
+
+### What is a polyfill
+
+### Differential loading
+
+
+
+
+
+
+# Capacitorを使ってAngularアプリの可能性を広げよう
+
+## what Capacitor
+クロスプラットフォーム向けのモバイル開発よう
+→Ｃｏｒｄｏｖａ的な
+  ->Cordovaの後継？
+
+## Difference of ReactNative/NativeScript
+- 独自のタグを書く必要がある
+- 
+
+cordova plugin supported!!!
+swift supported!!!
+
+
+
+
+
+
 
